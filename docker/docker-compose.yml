@@ -1,0 +1,47 @@
+wp_theme_app:
+    container_name: wp_theme_app
+    image: busybox
+    volumes:
+        - ../app:/var/www/
+
+wp_theme_nginx:
+    container_name: wp_theme_nginx
+    build: builds/nginx
+    volumes_from:
+        - wp_theme_app
+    ports:
+        - 5516:80
+    links:
+        - wp_theme_php:php
+    volumes:
+        - ./logs/nginx:/var/log/nginx
+
+wp_theme_php:
+    container_name: wp_theme_php
+    build: builds/php-fpm
+    volumes_from:
+        - wp_theme_app
+    links:
+        - wp_theme_mysql:mysql
+
+wp_theme_mysql:
+    container_name: wp_theme_mysql
+    image: mysql:5.6
+    volumes:
+        - ./mysql:/var/lib/mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: db
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
+
+wp_theme_pma:
+    container_name: wp_theme_pma
+    image: phpmyadmin/phpmyadmin
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
+        PMA_HOST: mysql
+    links:
+        - wp_theme_mysql:mysql
