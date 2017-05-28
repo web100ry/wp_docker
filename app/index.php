@@ -14,3 +14,4 @@ $product2=new Products("блабла", "тратата ", " опа па апап
 
 echo $product2->title,"<br>", $product2->descriptionProductFull,"<br>", $product2->descriptionProductShort,"<br>", $product2->price,
 "<br>", $product2->getFullNamePrice() ;
+// TEST from othet PC
